@@ -132,7 +132,7 @@ const S1 = () => {
                 variants={itemVariants}
               >
                 <Image
-                  src="/images/s1-i3.jpg"
+                  src="/images/s1-i3.webp"
                   alt="Fashionable denim bag design"
                   width={600}
                   height={400}

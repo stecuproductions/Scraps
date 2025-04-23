@@ -51,4 +51,3 @@ export function getProductById(id) {
   return products.find((product) => product.id === parseInt(id));
 }
 
-

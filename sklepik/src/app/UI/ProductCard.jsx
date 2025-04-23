@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <motion.div
-      className={`flex lg:flex-1 flex-col gap-4 justify-center rounded-lg mx-auto max-w-[500px] lg:min-w-[500px]  bg-gray-900/40 backdrop-blur-sm p-3 border border-gray-800 transition-all `}
+      className={`flex lg:flex-1 flex-col gap-4 justify-center rounded-lg mx-auto max-w-[300px] lg:min-w-[500px]  bg-gray-900/40 backdrop-blur-sm p-3 border border-gray-800 transition-all `}
       transition={{ duration: 0.3 }}
     >
       <div className="relative overflow-hidden rounded-lg group    ">

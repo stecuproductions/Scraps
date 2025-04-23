@@ -4,7 +4,9 @@ import AnimatedProductDetails from '../../components/products/AnimatedProductDet
 
 // Generowanie metadanych (dynamiczne title i description)
 export async function generateMetadata({ params }) {
-  const product = await getProductById(params.id)
+  // Ensure params is fully resolved before accessing its properties
+  const resolvedParams = await params;
+  const product = await getProductById(resolvedParams.id)
 
   if (!product) {
     return {
@@ -20,7 +22,9 @@ export async function generateMetadata({ params }) {
 
 // Strona produktu
 export default async function ProductPage({ params }) {
-  const product = await getProductById(params.id)
+  // Ensure params is fully resolved before accessing its properties
+  const resolvedParams = await params;
+  const product = await getProductById(resolvedParams.id)
 
   if (!product) {
     notFound()
