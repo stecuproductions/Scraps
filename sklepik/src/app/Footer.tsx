@@ -3,12 +3,30 @@
 import { useState } from "react";
 import Link from "next/link";
 import SvgLogo from "./UI/SvgLogo";
-import { ShoppingCart, ArrowRight, Check, Phone, Mail, MapPin, Instagram } from "lucide-react";
+import {
+  ShoppingCart,
+  ArrowRight,
+  Check,
+  Phone,
+  Mail,
+  MapPin,
+  Instagram,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 // Custom TikTok icon since it's not in Lucide React by default
 const TikTokIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
   </svg>
 );
@@ -30,54 +48,106 @@ const Footer = () => {
     <footer className="bg-[rgb(0,0,128)] text-white py-16">
       <div className="max-w-[1600px] mx-auto px-4 md:px-8">
         {/* Top section with logo and nav */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12 mb-16">
-          <div className="w-40 h-20">
+        <motion.div
+          className="flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12 mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <motion.div
+            className="w-40 h-20"
+            initial={{ x: -30, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+          >
             <SvgLogo />
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-8 md:gap-12">
-            <Link href="/" className="hover:text-blue-200 transition-colors uppercase tracking-wider text-sm">
+          </motion.div>
+
+          <motion.div
+            className="flex flex-wrap justify-center gap-8 md:gap-12"
+            initial={{ x: 30, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+          >
+            <Link
+              href="/"
+              className="hover:text-blue-200 transition-colors uppercase tracking-wider text-sm"
+            >
               Strona główna
             </Link>
-            <Link href="#oferta" className="hover:text-blue-200 transition-colors uppercase tracking-wider text-sm">
+            <Link
+              href="#oferta"
+              className="hover:text-blue-200 transition-colors uppercase tracking-wider text-sm"
+            >
               Kolekcja
             </Link>
-            <Link href="#about" className="hover:text-blue-200 transition-colors uppercase tracking-wider text-sm">
+            <Link
+              href="#about"
+              className="hover:text-blue-200 transition-colors uppercase tracking-wider text-sm"
+            >
               O nas
             </Link>
-            <Link href="/cart" className="flex items-center gap-2 hover:text-blue-200 transition-colors uppercase tracking-wider text-sm">
+            <Link
+              href="/cart"
+              className="flex items-center gap-2 hover:text-blue-200 transition-colors uppercase tracking-wider text-sm"
+            >
               <ShoppingCart size={16} />
               Koszyk
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Contact information */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 border-t border-b border-blue-900/30 py-10">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 border-t border-b border-blue-900/30 py-10"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
           {/* Phone & Email */}
           <div className="flex flex-col gap-3 items-center md:items-start">
-            <a href="tel:+48123456789" className="flex items-center gap-2 hover:text-blue-200 transition-colors">
+            <a
+              href="tel:+48123456789"
+              className="flex items-center gap-2 hover:text-blue-200 transition-colors"
+            >
               <Phone size={16} />
               <span>+48 123-456-789</span>
             </a>
-            <a href="mailto:info@scraps.com" className="flex items-center gap-2 hover:text-blue-200 transition-colors">
+            <a
+              href="mailto:info@scraps.com"
+              className="flex items-center gap-2 hover:text-blue-200 transition-colors"
+            >
               <Mail size={16} />
               <span>info@scraps.com</span>
             </a>
           </div>
-          
+
           {/* Social Media */}
           <div className="flex flex-col gap-3 items-center">
-            <a href="https://instagram.com/scraps123" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-blue-200 transition-colors">
+            <a
+              href="https://instagram.com/scraps123"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-blue-200 transition-colors"
+            >
               <Instagram size={16} />
               <span>@scraps123</span>
             </a>
-            <a href="https://tiktok.com/@scrapsTikTok" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-blue-200 transition-colors">
+            <a
+              href="https://tiktok.com/@scrapsTikTok"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-blue-200 transition-colors"
+            >
               <TikTokIcon />
               <span>@scrapsTikTok</span>
             </a>
           </div>
-          
+
           {/* Address */}
           <div className="flex flex-col gap-1 items-center md:items-end">
             <div className="flex items-center gap-2">
@@ -88,11 +158,19 @@ const Footer = () => {
               <span>78-345 Warszafka</span>
             </div>
           </div>
-        </div>
-        
+        </motion.div>
+
         {/* Newsletter section */}
-        <div className="max-w-md mx-auto mb-16">
-          <h3 className="font-header text-xl md:text-2xl mb-4 text-center">Newsletter</h3>
+        <motion.div
+          className="max-w-md mx-auto mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <h3 className="font-header text-xl md:text-2xl mb-4 text-center">
+            Newsletter
+          </h3>
           <p className="text-sm text-center mb-6">
             Zapisz się, aby otrzymywać informacje o nowościach i promocjach
           </p>
@@ -115,7 +193,7 @@ const Footer = () => {
             </motion.button>
           </form>
           {isSubmitted && (
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-sm text-center mt-2"
@@ -123,14 +201,21 @@ const Footer = () => {
               Dziękujemy za zapisanie się!
             </motion.p>
           )}
-        </div>
-        
+        </motion.div>
+
         {/* Copyright */}
-        <div className="text-center border-t border-blue-900/50 pt-8">
+        <motion.div
+          className="text-center border-t border-blue-900/50 pt-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          viewport={{ once: true }}
+        >
           <p className="text-sm">
-            &copy; {new Date().getFullYear()} Scraps. Wszystkie prawa zastrzeżone.
+            &copy; {new Date().getFullYear()} Scraps. Wszystkie prawa
+            zastrzeżone.
           </p>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

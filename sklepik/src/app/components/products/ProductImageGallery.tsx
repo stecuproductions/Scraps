@@ -7,9 +7,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface ProductImageGalleryProps {
   images: string[];
   productName: string;
+  onImageClick?: (image: string) => void; // Added prop for image click handler
 }
 
-export default function ProductImageGallery({ images, productName }: ProductImageGalleryProps) {
+export default function ProductImageGallery({ images, productName, onImageClick }: ProductImageGalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [direction, setDirection] = useState(0); // -1 for left, 1 for right, 0 for initial
   const [isLoaded, setIsLoaded] = useState(false);
@@ -39,6 +40,13 @@ export default function ProductImageGallery({ images, productName }: ProductImag
   const handleImageError = (index: number) => {
     console.error(`Error loading image at index ${index}:`, images[index]);
     setImageError(prev => ({...prev, [index]: true}));
+  };
+
+  // Handle main image click
+  const handleMainImageClick = () => {
+    if (onImageClick) {
+      onImageClick(images[selectedImageIndex]);
+    }
   };
 
   // Variants for thumbnail animations
@@ -102,10 +110,11 @@ export default function ProductImageGallery({ images, productName }: ProductImag
               src={images[selectedImageIndex]}
               alt={`${productName} main view`}
               fill
-              className="object-cover"
+              className="object-cover cursor-pointer"
               quality={100}
               priority
               onError={() => handleImageError(selectedImageIndex)}
+              onClick={handleMainImageClick}
             />
           </motion.div>
         </AnimatePresence>
@@ -118,6 +127,17 @@ export default function ProductImageGallery({ images, productName }: ProductImag
           transition={{ delay: 0.3, duration: 0.4 }}
         >
           {selectedImageIndex + 1} / {images.length}
+        </motion.div>
+
+        {/* Fullscreen hint */}
+        <motion.div 
+          className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full z-10
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 0, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+        >
+          Click to view fullscreen
         </motion.div>
 
         {/* Navigation arrows - only visible on hover or when there are multiple images */}
