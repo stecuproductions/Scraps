@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Plus, Minus, ShoppingBag, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 // Animation variants
 const containerVariants = {
@@ -23,6 +24,7 @@ const itemVariants = {
 };
 
 export default function CartPage() {
+  const router = useRouter();
   const { cart, addToCart, removeFromCart, clearCart } = useCart();
   const [checkoutClicked, setCheckoutClicked] = useState(false);
 
@@ -33,8 +35,7 @@ export default function CartPage() {
 
   const handleCheckout = () => {
     setCheckoutClicked(true);
-    alert('Dziękujemy za zakup!');
-    setTimeout(() => setCheckoutClicked(false), 1000);
+    router.push('/payment');
   };
 
   return (
