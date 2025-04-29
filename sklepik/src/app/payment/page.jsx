@@ -4,7 +4,6 @@ import { useCart } from '../data/CartContext';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
-
 export default function PaymentPage() {
   const { cart } = useCart();
   const router = useRouter();
@@ -65,7 +64,7 @@ export default function PaymentPage() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-header">{item.name}</h3>
+                    <a href={`/products/${item.id}`} className="font-header text-xl ">{item.name}</a>
                     <p className="text-gray-400">
                       Cena: {item.price.toFixed(2)} zł
                     </p>
@@ -160,10 +159,10 @@ export default function PaymentPage() {
                 />
                 
                 <select
-                  className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
+                  className="w-full p-3 bg-black border border-gray-700 focus:border-blue-400 outline-none transition-colors"
                   required
                 >
-                  <option value="" disabled selected>Wybierz metodę dostawy</option>
+                  <option  value="" defaultValue selected >Wybierz metodę dostawy</option>
                   <option value="courier">Kurier</option>
                   <option value="parcel_locker">Paczkomat</option>
                   <option value="post">Poczta Polska</option>

@@ -16,7 +16,7 @@ export default function Navbar() {
       <div className="flex items-center gap-4">
         {/* Cart button */}
         <Link href="/cart" className="p-1.5 sm:p-2 bg-white rounded-full hover:bg-blue-100 transition-colors">
-          <ShoppingCart className="text-black" size={28}  />
+          <ShoppingCart  className="text-black " size={28}  />
         </Link>
       </div>
     </nav>

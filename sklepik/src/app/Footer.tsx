@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import SvgLogo from "./UI/SvgLogo";
+import axios from "axios";
 import {
   ShoppingCart,
   ArrowRight,
@@ -11,6 +12,7 @@ import {
   Mail,
   MapPin,
   Instagram,
+  X,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -34,14 +36,28 @@ const TikTokIcon = () => (
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submissionMessage, setSubmissionMessage] = useState('');
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
+    const formData = new FormData();
+    formData.append("email", email);
+    try {
+      await axios.post('/api/newsletter', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });     
+      setSubmissionMessage("Gratulacje! Twój e-mail został zapisany.");
+    }
+    catch (error) {
+      console.error(error);
+      setSubmissionMessage("Coś poszło nie tak, spróbuj ponownie później");
+    }
     setTimeout(() => {
       setIsSubmitted(false);
-      setEmail("");
-    }, 3000);
+      setSubmissionMessage('');
+    }, 5000)
   };
 
   return (
@@ -185,20 +201,30 @@ const Footer = () => {
             />
             <motion.button
               type="submit"
-              className="absolute right-0 top-0 h-full px-4 bg-transparent text-white"
+              className="absolute right-0  top-0 h-full px-4 bg-transparent text-white"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {isSubmitted ? <Check size={20} /> : <ArrowRight size={20} />}
+              {!isSubmitted && <ArrowRight size={20} />}
+
+              {isSubmitted && submissionMessage === '' && null}
+
+              {isSubmitted && submissionMessage === 'Gratulacje! Twój e-mail został zapisany.' && (
+                <Check size={20} />
+              )}
+
+              {isSubmitted && submissionMessage !== '' && submissionMessage !== 'Gratulacje! Twój e-mail został zapisany.' && (
+                <X size={20} />
+              )}
             </motion.button>
           </form>
           {isSubmitted && (
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-sm text-center mt-2"
+              className="text-sm text-center mt-4"
             >
-              Dziękujemy za zapisanie się!
+              {submissionMessage}
             </motion.p>
           )}
         </motion.div>

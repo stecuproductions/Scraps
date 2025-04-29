@@ -46,7 +46,7 @@ export default function CartPage() {
       transition={{ duration: 0.5 }}
     >
       {/* Subtle diagonal pattern overlay */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute  inset-0 opacity-10">
         <div
           className="absolute inset-0"
           style={{

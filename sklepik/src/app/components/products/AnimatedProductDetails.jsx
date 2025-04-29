@@ -7,16 +7,17 @@ import { useEffect, useState } from 'react'
 import { useCart } from '@/app/data/CartContext'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { type } from 'os'
 
 export default function AnimatedProductDetails({ product }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [fullscreenImage, setFullscreenImage] = useState(null)
   const { addToCart } = useCart()
   const router = useRouter()
-
   useEffect(() => {
     setIsLoaded(true)
   }, [])
+  console.log('product', typeof prod);
 
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
@@ -72,7 +73,7 @@ export default function AnimatedProductDetails({ product }) {
       {/* Fullscreen Image Overlay */}
       <AnimatePresence>
         {fullscreenImage && (
-          <motion.div 
+          <motion.div
             className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -89,7 +90,7 @@ export default function AnimatedProductDetails({ product }) {
                   priority
                 />
               </div>
-              <motion.button 
+              <motion.button
                 className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -112,9 +113,9 @@ export default function AnimatedProductDetails({ product }) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <ProductImageGallery 
-              images={product.images} 
-              productName={product.name} 
+            <ProductImageGallery
+              images={product.images}
+              productName={product.name}
               onImageClick={handleOpenFullscreen}
             />
           </motion.div>
@@ -141,7 +142,7 @@ export default function AnimatedProductDetails({ product }) {
             </motion.div>
 
             <motion.div className="text-gray-300" variants={fadeIn}>
-              <p className="text-lg">{product.longDescription}</p>
+              <p className="text-lg">{product.long_description}</p>
             </motion.div>
 
             {/* Specifications */}
@@ -153,15 +154,16 @@ export default function AnimatedProductDetails({ product }) {
                 animate={isLoaded ? 'visible' : 'hidden'}
                 variants={staggerContainer}
               >
-                {product.specifications.map((spec, index) => (
+                {Object.entries(product.specifications).map(([key, value], index) => (
                   <motion.div
                     key={index}
                     className="py-2 border-b border-gray-800"
                     variants={specItemVariant}
                   >
-                    <span className="text-gray-400">{spec.name}:</span> {spec.value}
+                    <span className="text-gray-400">{key}:</span> {value}
                   </motion.div>
                 ))}
+
               </motion.div>
             </motion.div>
 
