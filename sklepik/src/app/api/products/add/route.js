@@ -62,6 +62,6 @@ export async function POST(request) {
 
   } catch (err) {
     console.error('Error during upload:', err);
-    return new Response(JSON.stringify({ error: 'Upload failed' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Upload failed' }), { status: 500 },     {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
   }
 }
