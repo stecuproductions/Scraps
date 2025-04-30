@@ -187,7 +187,7 @@ export default function CartPage() {
                               </div>
                               
                               <div className="font-header text-2xl whitespace-nowrap">
-                                {item.price.toFixed(2)} zł
+                                {item.price} zł
                               </div>
                             </div>
                             
