@@ -50,15 +50,17 @@ export async function POST(request) {
         const ext = path.extname(image.name) || '.webp';
         const filename = `p${newId}_${index++}${ext}`;
         const filepath = path.join(uploadDir, filename);
+        console.log("Próba zapisu:", filepath);
 
         await fs.writeFile(filepath, buffer);
+        console.log("Zapisano plik:", filepath);
         insertedUrls.push(`/images/products/${filename}`);
       }
     }
 
     await addImagesToProductInDb(newId, insertedUrls);
 
-    return Response.json({ id: newId, images: insertedUrls }, {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
+    return Response.json({ id: newId, images: insertedUrls}, {status:200} ,{headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
 
   } catch (err) {
     console.error('Error during upload:', err);
