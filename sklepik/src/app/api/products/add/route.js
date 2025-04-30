@@ -58,7 +58,7 @@ export async function POST(request) {
 
     await addImagesToProductInDb(newId, insertedUrls);
 
-    return Response.json({ id: newId, images: insertedUrls });
+    return Response.json({ id: newId, images: insertedUrls }, {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
 
   } catch (err) {
     console.error('Error during upload:', err);

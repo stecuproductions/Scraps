@@ -29,10 +29,10 @@ export async function DELETE(req) {
 
         await deleteProductFromDb(productId);
 
-    return new Response(JSON.stringify({ status: 200, success: true }), { status: 200 });
+    return new Response(JSON.stringify({ status: 200, success: true }), { status: 200 }, {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
     
   } catch (error) {
     console.error('DELETE error:', error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 }, {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
   }
 }

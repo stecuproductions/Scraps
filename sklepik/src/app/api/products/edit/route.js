@@ -6,7 +6,7 @@ export async function PUT(request){
         const authHeader = request.headers.get("authorization");
         const expectedToken = `${process.env.ADMIN_TOKEN}`;
         if (!authHeader || authHeader!=expectedToken){
-            return new Response(JSON.stringify({error: 'Unauthorized'}), {status:401});
+            return new Response(JSON.stringify({error: 'Unauthorized'}), {status:401}, {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
         }
         const formData = await request.formData();
         const id = formData.get('id');
@@ -27,13 +27,13 @@ export async function PUT(request){
         }
         const result = await editProductInDb(product, id);
         if (result.error == "Product not found"){
-            return new Response(JSON.stringify({error: 'Product not found'}), {status: 404});
+            return new Response(JSON.stringify({error: 'Product not found'}), {status: 404}, {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
         }
-        return Response.json({success: true, message: 'Product updated successfully'});
+        return Response.json({success: true, message: 'Product updated successfully'}, {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
 
     }
     catch(error){
         console.error('Error updating product:', error);
-        return new Response(JSON.stringify({error: 'Internal server error'}), {status: 500});
+        return new Response(JSON.stringify({error: 'Internal server error'}), {status: 500}, {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
     }
 }

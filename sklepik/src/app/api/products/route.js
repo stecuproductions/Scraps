@@ -17,6 +17,6 @@ export async function GET(){
         return NextResponse.json(productsWithImages);
     } catch (error) {
         console.error('Error fetching products:', error);
-        return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 }, {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type",}},);
     }
 }
