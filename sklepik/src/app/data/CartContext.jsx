@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
-
+import {products} from '@/app/data/products';
 const CartContext = createContext(null);
 
 export const useCart = () => {
@@ -16,13 +16,23 @@ export const CartProvider = ({ children }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // Potwierdzamy, że jesteśmy w przeglądarce
     setIsClient(true);
+  
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
-      setCart(JSON.parse(storedCart));
+      const tempCart = JSON.parse(storedCart);
+  
+      // Filtrowanie: tylko produkty które istnieją i mają stock > 0
+      const validCart = tempCart.filter((cartItem) => {
+        const matchingProduct = products.find((p) => p.id === cartItem.id);
+        return matchingProduct && matchingProduct.stock > 0;
+      });
+  
+      setCart(validCart);
+      localStorage.setItem('cart', JSON.stringify(validCart)); // Nadpisz nieprawidłowe
     }
-  }, []);
+  }, [products]);
+  
 
   useEffect(() => {
     if (isClient) {

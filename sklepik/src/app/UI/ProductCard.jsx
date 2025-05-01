@@ -28,31 +28,32 @@ const ProductCard = ({ product }) => {
       transition={{ duration: 0.3 }}
     >
       <div className="relative overflow-hidden rounded-lg group    ">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={cureentImageIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Image
-              src={product.images[cureentImageIndex]}
-              alt={product.name}
-              layout="responsive" // <-- kluczowe!
-              width={800}         // dowolna wartość (określa proporcje)
-              height={600}
-              quality={100}
-              objectFit="contain" // <-- to zostaje
-              className="rounded-lg shadow-lg"
-              onClick={() =>
-                setCurrentImageIndex(
-                  (cureentImageIndex + 1) % product.images.length
-                )
-              }
-            />
-          </motion.div>
-        </AnimatePresence>
+      <div className="w-full aspect-[4/3] relative">
+  <AnimatePresence mode="wait">
+    <motion.div
+      key={cureentImageIndex}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="absolute inset-0"
+    >
+      <Image
+        src={product.images[cureentImageIndex]}
+        alt={product.name}
+        layout="fill"
+        objectFit="contain"
+        quality={100}
+        className="rounded-lg shadow-lg"
+        onClick={() =>
+          setCurrentImageIndex(
+            (cureentImageIndex+ 1) % product.images.length
+          )
+        }
+      />
+    </motion.div>
+  </AnimatePresence>
+</div>
 
         {/* Image navigation circles */}
         {product.images.length > 1 && (
