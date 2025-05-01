@@ -9,7 +9,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import scraps.GlobalVars;
-import scraps.data.Item;
+import scraps.model.Item;
 
 import java.io.File;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 public class ApiRequestSender {
     private OkHttpClient client = new OkHttpClient();
 
-    public void AddProduct(Item item, List<File> imageList){
+    public Response AddProduct(Item item, List<File> imageList){
         Gson gson = new Gson();
         String specJson = gson.toJson(item.getSpecification());
 
@@ -44,14 +44,16 @@ public class ApiRequestSender {
         Request request = new Request.Builder()
                 .url(GlobalVars.apiUrl + "/api/products/add")
                 .post(formData)
-                .addHeader("Authorization", GlobalVars.adminToken)
+                .addHeader("Authorization", GlobalVars.adminToken )
                 .build();
+        Response resp=null;
         try(Response response = client.newCall(request).execute()){
             System.out.println(response);
-
+            resp=response;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return resp;
     }
 
     public void DeleteProduct(int id){
@@ -77,7 +79,8 @@ public class ApiRequestSender {
         }
     }
 
-    public void EditProduct(int id, Item item){
+    public Response EditProduct(int id, Item item) {
+        //TODO EDITING IMAGES
         Gson gson = new Gson();
         String specJson = gson.toJson(item.getSpecification());
         MultipartBody.Builder formBuilder = new MultipartBody.Builder()
@@ -95,12 +98,16 @@ public class ApiRequestSender {
                 .put(formData)
                 .addHeader("Authorization", GlobalVars.adminToken)
                 .build();
+        Response resp = null;
         try(Response response = client.newCall(request).execute()){
             System.out.println(response);
+            resp = response;
 
         } catch (Exception e) {
             e.printStackTrace();
+            resp = null;
         }
+        return resp;
     }
 }
 

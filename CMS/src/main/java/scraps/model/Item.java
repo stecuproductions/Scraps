@@ -1,4 +1,6 @@
-package scraps.data;
+package scraps.model;
+
+import scraps.GlobalVars;
 
 import java.util.ArrayList ;
 import java.util.List ;
@@ -21,8 +23,11 @@ public class Item {
         this.specification = new Specification(material, a, b, c, weightG);
         this.stock = stock;
         this.price = price;
-        this.imageUrls = imageUrls;
+        for(String imageUrl : imageUrls){
+            this.imageUrls.add(imageUrl);
+        }
     }
+
     public Item(String name, String description, String longDescription,  int a, int b, int c, String material, int weightG,  int stock, double price) {
         this.name = name;
         this.description = description;

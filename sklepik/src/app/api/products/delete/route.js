@@ -1,7 +1,18 @@
 import { deleteProductFromDb,  getProductImagesFromDb } from '@/lib/db';
 import path from 'path';
-import fs from 'fs/promises';
+import cloudinary from '@/lib/cloudinary';
 
+function extractCloudinaryPublicId(url){
+  try {
+    const parts = url.split('/upload/')[1];
+    if (!parts) return null;
+    const pathParts = parts.split('.');
+    pathParts.pop(); // usuwa rozszerzenie (np. .jpg, .webp)
+    return pathParts.join('.'); // pozwala zachować nazwę nawet jeśli są kropki
+  } catch {
+    return null;
+  }
+}
 
 export async function DELETE(req) {
   try {
@@ -23,8 +34,11 @@ export async function DELETE(req) {
     const imageUrls = imagesResult.map((image)=>image.image_url);
 
     for(const imageUrl of imageUrls ){
+      const publicId=extractCloudinaryPublicId(imageUrl);
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
 
-        await fs.unlink(path.join(process.cwd(), "public", imageUrl));
     }
 
         await deleteProductFromDb(productId);

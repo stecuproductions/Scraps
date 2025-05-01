@@ -1,4 +1,4 @@
-package scraps.data;
+package scraps.model;
 
 public class Specification {
         private String material;
