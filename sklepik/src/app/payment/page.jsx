@@ -3,17 +3,20 @@
 import { useCart } from '../data/CartContext';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
 import Image from 'next/image';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
 export default function PaymentPage() {
   const { cart } = useCart();
   const router = useRouter();
-   
 
-  // Calculate total
   const totalPrice = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -26,32 +29,45 @@ export default function PaymentPage() {
     apartmentNumber: '',
     deliveryMethod: '',
   });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-
-  const handleSubmitPayment = (e) => {
+  const handleSubmitPayment = async (e) => {
     e.preventDefault();
-    alert('Przejdź do płatności - formularz wysłany!');
+    const stripe = await stripePromise;
+
+    const res = await fetch('/api/checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: cart,
+        customer: formData,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.url) {
+      stripe?.redirectToCheckout({ sessionId: data.url.split('/').pop() });
+    } else {
+      alert('Wystąpił błąd przy tworzeniu sesji płatności');
+    }
   };
 
   return (
-    <div className=" bg-black text-white">
+    <div className="bg-black text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Cart Summary - Left side */}
           <div className="lg:col-span-5">
-            <div className="mb-8">
-              <h2 className="text-3xl font-header">Podsumowanie</h2>
-            </div>
-
+            <h2 className="text-3xl font-header mb-8">Podsumowanie</h2>
             <div className="space-y-6">
               {cart.map((item) => (
                 <div key={item.id} className="flex gap-4 items-center">
                   <div className="w-20 h-20 relative bg-gray-800 rounded-md overflow-hidden">
-                    {item.images && item.images[0] && (
+                    {item.images?.[0] && (
                       <Image
                         src={item.images[0]}
                         alt={item.name}
@@ -64,13 +80,9 @@ export default function PaymentPage() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <a href={`/products/${item.id}`} className="font-header text-xl ">{item.name}</a>
-                    <p className="text-gray-400">
-                      Cena: {item.price.toFixed(2)} zł
-                    </p>
-                    <p className="text-gray-400">
-                      Ilość: {item.quantity}
-                    </p>
+                    <a href={`/products/${item.id}`} className="font-header text-xl">{item.name}</a>
+                    <p className="text-gray-400">Cena: {item.price} zł</p>
+                    <p className="text-gray-400">Ilość: {item.quantity}</p>
                   </div>
                 </div>
               ))}
@@ -79,101 +91,36 @@ export default function PaymentPage() {
             <div className="mt-8 pt-6 border-t border-gray-800">
               <div className="flex justify-between items-center">
                 <span className="font-header text-xl">Razem</span>
-                <span className="font-header text-2xl">{totalPrice.toFixed(2)} zł</span>
+                <span className="font-header text-2xl">{totalPrice} zł</span>
               </div>
             </div>
           </div>
 
-          {/* Shipping Information - Right side */}
           <div className="lg:col-span-7">
-            <div className="mb-8">
-              <h2 className="text-3xl font-header">Dane do wysyłki</h2>
-            </div>
-
+            <h2 className="text-3xl font-header mb-8">Dane do wysyłki</h2>
             <form onSubmit={handleSubmitPayment} className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
-                <input
-                  type="text"
-                  placeholder="Imię"
-                  className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                  required
-                />
-                
-                <input
-                  type="text"
-                  placeholder="Nazwisko"
-                  className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                  required
-                />
-                
-                <input
-                  type="email"
-                  placeholder="E-mail"
-                  className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                  required
-                />
-                
-                <input
-                  type="tel"
-                  placeholder="Nr. telefonu"
-                  className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                  required
-                />
-                
+                <input name="firstName" value={formData.firstName} onChange={handleChange} required placeholder="Imię" className="form-input" />
+                <input name="lastName" value={formData.lastName} onChange={handleChange} required placeholder="Nazwisko" className="form-input" />
+                <input name="email" type="email" value={formData.email} onChange={handleChange} required placeholder="E-mail" className="form-input" />
+                <input name="phone" type="tel" value={formData.phone} onChange={handleChange} required placeholder="Nr. telefonu" className="form-input" />
                 <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="Miasto"
-                    className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                    required
-                  />
-                  
-                  <input
-                    type="text"
-                    placeholder="Kod Pocztowy"
-                    className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                    required
-                  />
+                  <input name="city" value={formData.city} onChange={handleChange} required placeholder="Miasto" className="form-input" />
+                  <input name="zip" value={formData.zip} onChange={handleChange} required placeholder="Kod pocztowy" className="form-input" />
                 </div>
-                
                 <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="Ulica"
-                    className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                    required
-                  />
-                  
-                  <input
-                    type="text"
-                    placeholder="Numer domu"
-                    className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                    required
-                  />
+                  <input name="street" value={formData.street} onChange={handleChange} required placeholder="Ulica" className="form-input" />
+                  <input name="houseNumber" value={formData.houseNumber} onChange={handleChange} required placeholder="Numer domu" className="form-input" />
                 </div>
-                
-                <input
-                  type="text"
-                  placeholder="Numer Mieszkania"
-                  className="w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                />
-                
-                <select
-                  className="w-full p-3 bg-black border border-gray-700 focus:border-blue-400 outline-none transition-colors"
-                  required
-                >
-                  <option  value="" defaultValue selected >Wybierz metodę dostawy</option>
+                <input name="apartmentNumber" value={formData.apartmentNumber} onChange={handleChange} placeholder="Numer mieszkania" className="form-input" />
+                <select name="deliveryMethod" value={formData.deliveryMethod} onChange={handleChange} required className="form-input">
+                  <option value="">Wybierz metodę dostawy</option>
                   <option value="courier">Kurier</option>
                   <option value="parcel_locker">Paczkomat</option>
                   <option value="post">Poczta Polska</option>
                 </select>
-                
                 <div className="mt-6">
-                  <button
-                  
-                    type="submit"
-                    className="border-2 border-blue-400 text-blue-200 hover:bg-blue-400 hover:text-blue-950 font-body py-3 px-10 rounded-none transition-all duration-300 uppercase tracking-wider text-sm font-medium"
-                  >
+                  <button type="submit" className="border-2 border-blue-400 text-blue-200 hover:bg-blue-400 hover:text-blue-950 font-body py-3 px-10 transition-all uppercase tracking-wider text-sm font-medium">
                     Przejdź do płatności
                   </button>
                 </div>

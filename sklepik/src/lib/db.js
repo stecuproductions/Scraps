@@ -73,3 +73,9 @@ export async function editProductInDb(product, id){
 
     return {success: true};    
 }
+
+export async function getNewsletterSubscribersFromDB() {
+    const result = await pool.query('SELECT * FROM newsletter_subscribers');
+    return result.rows;
+    
+  }

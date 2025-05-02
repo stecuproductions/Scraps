@@ -21,3 +21,6 @@
   
   scroll-behavior: smooth;
 }
+.form-input {
+  @apply w-full p-3 bg-transparent border border-gray-700 focus:border-blue-400 outline-none transition-colors;
+}
