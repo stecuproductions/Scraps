@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import Image from 'next/image';
+import { products } from '../data/products';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export default function PaymentPage() {
   const { cart } = useCart();
@@ -37,24 +37,33 @@ export default function PaymentPage() {
 
   const handleSubmitPayment = async (e) => {
     e.preventDefault();
-    const stripe = await stripePromise;
-
-    const res = await fetch('/api/checkout-session', {
+    console.log(formData);
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+    const body = {
+      products: cart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+      ...formData,
+    }
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    const response = await fetch('/api/checkout-session', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        items: cart,
-        customer: formData,
-      }),
+      headers,
+      body: JSON.stringify(body),
+    });
+    const session = await response.json();
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
     });
 
-    const data = await res.json();
-
-    if (data.url) {
-      stripe?.redirectToCheckout({ sessionId: data.url.split('/').pop() });
-    } else {
-      alert('Wystąpił błąd przy tworzeniu sesji płatności');
-    }
+    if (result.error) {
+      console.error(result.error.message);
+    }    
   };
 
   return (
