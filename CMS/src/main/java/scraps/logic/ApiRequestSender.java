@@ -56,7 +56,7 @@ public class ApiRequestSender {
         return resp;
     }
 
-    public void DeleteProduct(int id){
+    public Response DeleteProduct(int id){
 
 
         MultipartBody.Builder formBuilder = new MultipartBody.Builder()
@@ -71,12 +71,16 @@ public class ApiRequestSender {
                 .delete(formData)
                 .addHeader("Authorization", GlobalVars.adminToken)
                 .build();
+        Response resp=null;
         try(Response response = client.newCall(request).execute()){
             System.out.println(response);
+            resp=response;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return resp;
+
     }
 
     public Response EditProduct(int id, Item item) {
@@ -96,6 +100,24 @@ public class ApiRequestSender {
         Request request = new Request.Builder()
                 .url(GlobalVars.apiUrl + "/api/products/edit")
                 .put(formData)
+                .addHeader("Authorization", GlobalVars.adminToken)
+                .build();
+        Response resp = null;
+        try(Response response = client.newCall(request).execute()){
+            System.out.println(response);
+            resp = response;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp = null;
+        }
+        return resp;
+    }
+
+    public  Response GetNewsletterSubscribers(){
+        Request request = new Request.Builder()
+                .url(GlobalVars.apiUrl + "/api/newsletter")
+                .get()
                 .addHeader("Authorization", GlobalVars.adminToken)
                 .build();
         Response resp = null;

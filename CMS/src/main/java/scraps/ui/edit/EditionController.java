@@ -118,9 +118,22 @@ public class EditionController {
 
             alert.showAndWait().ifPresent(response -> {
                 if (response == tak) {
-                    System.out.println("Usuwam produkt: " + item.getId() + " - " + item.getName());
                     productContainer.getChildren().remove(card);
-                    scrapsManager.DeleteItem(item.getId());
+                    Response resp = scrapsManager.DeleteItem(item.getId());
+                    if(resp.code() == 200) {
+                        Alert info = new Alert(Alert.AlertType.INFORMATION);
+                        info.setTitle("Sukces");
+                        info.setHeaderText(null);
+                        info.setContentText("Produkt \"" + item.getName() + "\" został usuniety pomyślnie.");
+                        info.showAndWait();
+                    }
+                    else{
+                        Alert info = new Alert(Alert.AlertType.ERROR);
+                        info.setTitle("Failed");
+                        info.setHeaderText(null);
+                        info.setContentText("Cos poszlo nie tak. Skontaktuj sie z developerem lub sproboj ponownie");
+                        info.showAndWait();
+                    }
                 } else {
                     System.out.println("Anulowano usuwanie.");
                 }
@@ -287,15 +300,24 @@ public class EditionController {
             confirm.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
                     Item newItem = new Item( nameField.getText(), descField.getText(), longDescField.getText(), aField.getValue(), bField.getValue(), cField.getValue(), materialField.getText(), weightField.getValue(), stockField.getValue(), priceField.getValue());
-                    scrapsManager.EditItem(item.getId(), newItem);
+                    Response resp = scrapsManager.EditItem(item.getId(), newItem);
+                    if(resp.code() == 200) {
+                        Alert info = new Alert(Alert.AlertType.INFORMATION);
+                        info.setTitle("Sukces");
+                        info.setHeaderText(null);
+                        info.setContentText("Produkt \"" + nameField.getText() + "\" został edytoway pomyślnie.");
+                        info.showAndWait();
+                        formStage.close();
+                    }
+                    else{
+                        Alert info = new Alert(Alert.AlertType.ERROR);
+                        info.setTitle("Failed");
+                        info.setHeaderText(null);
+                        info.setContentText("Cos poszlo nie tak. Skontaktuj sie z developerem lub sproboj ponownie");
+                        info.showAndWait();
+                        formStage.close();
+                    }
 
-                    Alert info = new Alert(Alert.AlertType.INFORMATION);
-                    info.setTitle("Sukces");
-                    info.setHeaderText(null);
-                    info.setContentText("Zmiany zostały zapisane.");
-                    info.showAndWait();
-
-                    formStage.close();
                 }
             });
         });

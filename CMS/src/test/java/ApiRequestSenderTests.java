@@ -1,3 +1,4 @@
+import okhttp3.Response;
 import org.junit.jupiter.api.Test;
 import scraps.model.Item;
 import scraps.logic.ApiRequestSender;
@@ -38,6 +39,13 @@ public class ApiRequestSenderTests {
         Item newItem = new Item(newName, newDescription, newLongDescription, newA, newB, newC, newMaterial, newWeight, newStock, newPrice);
         int editItemId = 2000;
         System.out.println(sender.EditProduct(editItemId, newItem));
+    }
+
+    @Test
+    public void getNewsletterApiRequestTest(){
+        ApiRequestSender sender = new ApiRequestSender();
+        Response response = sender.GetNewsletterSubscribers();
+        System.out.println(response);
     }
 
 

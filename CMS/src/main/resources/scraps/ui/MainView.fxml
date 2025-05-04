@@ -17,7 +17,7 @@
       <HBox prefHeight="54.0" prefWidth="600.0" spacing="40.0" style="-fx-alignment: center;">
          <children>
           <Button mnemonicParsing="false" onAction="#goToEdit" text="Edytuj Produkty" />
-            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" onAction="#goToNewsletter"  text = "Newsletter"/>
             <Button mnemonicParsing="false" text="Button" />
          </children>
          <opaqueInsets>

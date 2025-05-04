@@ -25,11 +25,11 @@ public class ScrapsManager {
         Item newItem = new Item(name, description, longDescription, a, b, c, material, weightG, stock, price);
         return apiRequestSender.AddProduct(newItem, imageList);
     }
-    public void DeleteItem(int id){
-        apiRequestSender.DeleteProduct(id);
+    public Response DeleteItem(int id){
+        return apiRequestSender.DeleteProduct(id);
     }
-    public void EditItem(int id, Item item){
-        apiRequestSender.EditProduct(id, item);
+    public Response EditItem(int id, Item item){
+        return apiRequestSender.EditProduct(id, item);
     }
     public List<Item> GetItemList(){
         return dataProvider.getItems();
